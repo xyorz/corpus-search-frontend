@@ -1,38 +1,93 @@
+@import '~antd/dist/antd.css';
+
 .App {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.searchContainer {
+  width: 100%;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchTitle {
+  font-size: 32px;
+  color: #555555;
+}
+
+.searchBox {
+  width: 45%;
+  margin-top: 25px;
+  min-width: 500px;
+}
+
+.searchTable {
+  width: 75%;
+}
+
+.searchConfig {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+  width: 42%;
+  min-width: 500px;
+}
+
+thead {
+  visibility: hidden;
+}
+
+table {
+  cursor: default;
+}
+
+.tableButton {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  top: 0;
+  right: 0;
+  margin-right: -120px;
+}
+
+.tableButton button {
+  margin: 0 3px;
+  font-size: 12px;
+  color: gray;
+}
+
+.textId {
+  position: absolute;
+  height: 100%;
+  left: -30px;
+  top: 0;
+  display: flex;
+  align-items: center;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.ant-modal {
+  width: 720px !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.contextContent {
+  margin-bottom: 30px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.contextContent p {
+  text-indent: 2em;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.contextContentTitle {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: gray
 }
