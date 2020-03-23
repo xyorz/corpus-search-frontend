@@ -2,7 +2,7 @@ import React from 'react'
 import {Table, Button} from 'antd'
 
 function SearchTable (props) {
-  const {className, data, total, currentPage, onChangePage, onShowContext} = props;
+  const {className, data, total, currentPage, pageSize, onChangePage, onChangePageSize, onShowContext, onTextDisplay} = props;
 
   const columns = [
     {
@@ -35,7 +35,7 @@ function SearchTable (props) {
           {text}
           <div className="tableButton">
             <Button className="context" size="small" onClick={() => onShowContext(record.id)}>上下文</Button>
-            <Button className="context" size="small">原文</Button>
+            <Button className="context" size="small" onClick={() => onTextDisplay(record.id.split(".")[0])}>原文</Button>
           </div>
         </div>
       )
@@ -43,11 +43,14 @@ function SearchTable (props) {
   ];
 
   const pagination = {
-    pageSize: 30,
+    pageSize: pageSize,
     total: total,
     onChange: onChangePage,
     current: currentPage,
-    size: 'normal'
+    size: 'normal',
+    showSizeChanger: true,
+    showQuickJumper: true,
+    onShowSizeChange: onChangePageSize
   }
   return (
     <div className={className}>

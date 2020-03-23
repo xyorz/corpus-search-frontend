@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import axios from 'axios'
 import { InputNumber, Input, Select } from 'antd';
 
 const {Option} = Select;
