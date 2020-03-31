@@ -1,8 +1,20 @@
 import React from 'react'
 import {Table, Button} from 'antd'
+import {highLight} from '../config'
 
 function SearchTable (props) {
-  const {className, data, total, currentPage, pageSize, onChangePage, onChangePageSize, onShowContext, onTextDisplay} = props;
+  const {
+    className, 
+    data, 
+    total, 
+    currentPage, 
+    pageSize, 
+    onChangePage, 
+    onChangePageSize, 
+    onShowContext, 
+    onTextDisplay, 
+    highLightWords
+  } = props;
 
   const columns = [
     {
@@ -12,7 +24,7 @@ function SearchTable (props) {
       align: 'right',
       render: (text, record) => (
         <div>
-          {text}
+          {highLight(text, highLightWords)}
           <div className="textId">
             <strong>{record.displayId}</strong>
           </div>
@@ -32,7 +44,7 @@ function SearchTable (props) {
       align: 'left',
       render: (text, record) => (
         <div>
-          {text}
+          {highLight(text, highLightWords)}
           <div className="tableButton">
             <Button className="context" size="small" onClick={() => onShowContext(record.id)}>上下文</Button>
             <Button className="context" size="small" onClick={() => onTextDisplay(record.id.split(".")[0])}>原文</Button>

@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
+import {server} from '../config'
 import { InputNumber, Input, Select } from 'antd';
 
 const {Option} = Select;
@@ -6,6 +8,20 @@ const {Option} = Select;
 function SearchConfig(props) {
   const {onConfigChange} = props;
   const [filters, setFilters] = useState({});
+  const [filterPresets, setFilterPresets] = useState({});
+
+  useEffect(() => {
+    axios.post(`${server}/corpus/get_preset/`).then(res => {
+      if (res.data && res.data.list) {
+        const list = res.data.list;
+        const presetsObj = {};
+        for (let item of list) {
+          presetsObj[item.type] = item.value.split("|");
+        }
+        setFilterPresets(presetsObj);
+      }
+    })
+  }, [])
 
   const onFiltersChange = filterField => filterVal => {
     filters[filterField] = filterVal;
@@ -58,8 +74,9 @@ function SearchConfig(props) {
             value={filters.dynasty}
             onChange={onFiltersChange("dynasty")}
           >
-            <Option value="唐">唐</Option>
-            <Option value="宋">宋</Option>  
+            {filterPresets.dynasty && filterPresets.dynasty.map((val, index) => (
+              <Option value={val} key={index}>{val}</Option>
+            ))}
           </Select>
           <Select 
             style={{width: "20%", margin: "auto 10px"}} 
@@ -67,9 +84,9 @@ function SearchConfig(props) {
             value={filters.area}
             onChange={onFiltersChange("area")}
           >
-            <Option value="南方">南方</Option>
-            <Option value="北方">北方</Option>  
-            <Option value="未知">未知</Option>
+            {filterPresets.area && filterPresets.area.map((val, index) => (
+              <Option value={val} key={index}>{val}</Option>
+            ))}
           </Select>
           <Select 
             style={{width: "20%", margin: "auto 7px auto 10px"}} 
@@ -77,9 +94,9 @@ function SearchConfig(props) {
             value={filters.type}
             onChange={onFiltersChange("type")}
           >
-            <Option value="原文">原文</Option>
-            <Option value="注解">注解</Option>
-            <Option value="义疏">义疏</Option>  
+            {filterPresets.area && filterPresets.type.map((val, index) => (
+              <Option value={val} key={index}>{val}</Option>
+            ))}  
           </Select>
         </div>
       </div>

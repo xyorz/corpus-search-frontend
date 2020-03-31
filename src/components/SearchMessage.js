@@ -8,10 +8,15 @@ function SearchMessage(props) {
   }
   const {total, page, pageSize} = messageData;
   const messageFormat = (
-    <div style={{color: "gray"}}>共 <strong>{total}</strong> 条结果，当前显示第 <strong>{(page-1) * pageSize + 1} - {page * pageSize >= total? total: page * pageSize}</strong> 条</div>
+    <div style={{color: "gray", display: "flex", alignItems: "center", justifyContent: "center", height: "100%"}}>
+      共 
+      <strong>{total}</strong> 条结果，当前显示第 
+      <strong>{(page-1) * pageSize + 1} - {page * pageSize >= total? total: page * pageSize}</strong> 
+      条
+    </div>
   )
   return (
-    <Alert message={messageFormat} type="info" className={className} />
+    <Alert message={messageFormat} type="info" className={className} style={{minWidth: "400px"}} />
   )
 }
 

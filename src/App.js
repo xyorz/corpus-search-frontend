@@ -10,6 +10,7 @@ import SearchConfig from './components/SearchConfig'
 import ContextModal from './components/ContextModal'
 import readmeHTML from './components/Readme'
 import TextDisplay from './components/TextDisplay'
+import StatisticsModal from './components/StatisticsModal'
 import './App.css';
 import SearchMessage from './components/SearchMessage';
 
@@ -31,7 +32,10 @@ function App() {
   const [filters, setFilters] = useState({});
   const [context, setContext] = useState({prev: [], cur: [], next: []});
   const [contextModalVisible, setContextModalVisible] = useState(false);
+  const [statistics, setStatistics] = useState([]);
+  const [statisticsModalVisible, setStatisticsModalVisible] = useState(false);
   const [textDisplayId, setTextDisplayId] = useState(null);
+  const [highLightWords, setHighLightWords] = useState([]);
 
   const searchRequest = (url, params) => {
     axios.get(url, {params}).then(res => {
@@ -47,6 +51,18 @@ function App() {
       result.doc_list.forEach((doc, index) => {
         doc.displayId = (params.page - 1) * params.pageSize + index + 1;
       });
+      const highLightWordList = [];
+      if (result.keywords) {
+        for (let keyword of result.keywords) {
+          highLightWordList.push({type: "word", value: keyword})
+        }
+      }
+      if (result.regexps) {
+        for (let regexp of result.regexps) {
+          highLightWordList.push({type: "regexp", value: regexp})
+        }
+      }
+      setHighLightWords(highLightWordList);
       setData(result.doc_list);
       setTotal(result.total);
     })
@@ -97,6 +113,17 @@ function App() {
     setContextModalVisible(false);
   }
 
+  const onShowStatistics = () => {
+    axios.post(`${server}/corpus/get_res_statistics/`, {type: params.type, keyword: params.keyword}).then(res => {
+      setStatistics(res.data.dict)
+      setStatisticsModalVisible(true);
+    })
+  }
+
+  const onHideStatistics = () => {
+    setStatisticsModalVisible(false);
+  }
+
   const onTextDisplay = textId => {
     setPage("textDisplay");
     setTextDisplayId(textId);
@@ -106,13 +133,19 @@ function App() {
   return (
     <ConfigProvider locale={zhCN}>
       <div className="App">
-        <ContextModal visible={contextModalVisible} onOk={onHideContext} context={context} />
+        <ContextModal visible={contextModalVisible} onOk={onHideContext} context={context} highLightWords={highLightWords} />
+        <StatisticsModal visible={statisticsModalVisible} onOk={onHideStatistics} data={statistics} />
         <div className="topMenu">
           <TopMenu page={page} setPage={setPage} />
         </div>
         <div className="searchContainer" style={{display: page === "search"? "flex": "none"}}>
           <h1 className="searchTitle">古汉语语料库</h1>
-          <SearchInput search={onSearch} className="searchBox"/>
+          <SearchInput 
+            search={onSearch} 
+            className="searchBox" 
+            showStatistics={total > 0} 
+            onShowStatistics={onShowStatistics}
+          />
           <SearchConfig
             onConfigChange={onConfigChange} 
             className="searchConfig" 
@@ -130,6 +163,7 @@ function App() {
             onChangePageSize={onChangePageSize}
             onShowContext={onShowContext}
             onTextDisplay={onTextDisplay}
+            highLightWords={highLightWords}
             className="searchTable"
           />
         </div>
