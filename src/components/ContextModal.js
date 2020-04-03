@@ -4,6 +4,12 @@ import { infoTagFilterList, infoTagNameMap, highLight } from '../config';
 
 const getDetailElem = info => {
   const infoShow = {};
+  if (Object.keys(info).includes("detail") && info.detail) {
+    const detail = JSON.parse(info.detail);
+    for (let key of Object.keys(detail)) {
+      infoShow[key] = detail[key];
+    }
+  }
   for (let key of Object.keys(info)) {
     if (!infoTagFilterList.includes(key)) {
       if (Object.keys(infoTagNameMap).includes(key)) infoShow[infoTagNameMap[key]] = info[key]
@@ -17,6 +23,55 @@ const getDetailElem = info => {
       ))}
     </div>
   )
+}
+
+const buildZhujie = (spanList, zhujieInfo=[], text) => {
+  const resList = [];
+  // if (!zhujieInfo) {
+  //   return spanList;
+  // }
+  const offsetList = (zhujieInfo && zhujieInfo.offset.map(offset => offset + 1)) || [];
+  let allSplit = [...new Set(spanList.flat(Infinity).concat(offsetList))];
+  allSplit = allSplit.sort((a, b) => a-b);
+  let curIndex = 0;
+  let lastIndex = 0;
+  const indexInSpan = index => {
+    for (let span of spanList) {
+      if (index > span[0] && index <= span[1]) {
+        return true;
+      }
+    }
+    return false;
+  }
+  const getZhujieByIndex = index => {
+    const zjIndex = offsetList.indexOf(index);
+    if (zjIndex < 0) {
+      return null;
+    }
+    return zhujieInfo.content[zjIndex];
+  }
+  let keyId = 0;
+  for (let i of allSplit) {
+    curIndex = i;
+    const zhujie = getZhujieByIndex(curIndex);
+    if (zhujie) {
+      if (indexInSpan(curIndex)) {
+        resList.push(<span key={keyId++} style={{color: 'red'}}>{text.slice(lastIndex, curIndex)}</span>);
+      } else {
+        resList.push(<span key={keyId++}>{text.slice(lastIndex, curIndex)}</span>);
+      }
+      resList.push(<Tooltip key={keyId++} title={zhujie}><span style={{color: "blue"}}> [*] </span></Tooltip>);
+    } else {
+      if (indexInSpan(curIndex)) {
+        resList.push(<span key={keyId++} style={{color: 'red'}}>{text.slice(lastIndex, curIndex)}</span>);
+      } else {
+        resList.push(<span key={keyId++}>{text.slice(lastIndex, curIndex)}</span>);
+      }
+    }
+    lastIndex = curIndex;
+  }
+  resList.push(<span key={keyId++}>{text.slice(curIndex)}</span>)
+  return resList;
 }
 
 function ContextModal(props) {
@@ -37,7 +92,7 @@ function ContextModal(props) {
           <p key={index}>
             {sentences.map((info, index) => (
               <Tooltip key={index} title={getDetailElem(info)}  placement="top" autoAdjustOverflow>
-                <span className="contextText">{highLight(info.text, highLightWords)}</span>
+                <span className="contextText">{buildZhujie(highLight(info.text, highLightWords, false), info.zhujie? JSON.parse(info.zhujie) : null, info.text)}</span>
               </Tooltip>
             ))}
           </p>
@@ -49,7 +104,7 @@ function ContextModal(props) {
           <p key={index}>
             {sentences.map((info, index) => (
               <Tooltip key={index} title={getDetailElem(info)}  placement="top" autoAdjustOverflow>
-                <span className="contextText">{highLight(info.text, highLightWords)}</span>
+                <span className="contextText">{buildZhujie(highLight(info.text, highLightWords, false), info.zhujie? JSON.parse(info.zhujie) : null, info.text)}</span>
               </Tooltip>
             ))}
           </p>
@@ -61,7 +116,7 @@ function ContextModal(props) {
           <p key={index}>
             {sentences.map((info, index) => (
               <Tooltip key={index} title={getDetailElem(info)}  placement="top" autoAdjustOverflow>
-                <span className="contextText">{highLight(info.text, highLightWords)}</span>
+                <span className="contextText">{buildZhujie(highLight(info.text, highLightWords, false), info.zhujie? JSON.parse(info.zhujie) : null, info.text)}</span>
               </Tooltip>
             ))}
           </p>

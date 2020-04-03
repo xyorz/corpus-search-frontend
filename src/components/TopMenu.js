@@ -6,6 +6,7 @@ import {
   DownloadOutlined,
   LayoutOutlined
 } from '@ant-design/icons';
+import { server } from '../config';
 
 function TopMenu (props) {
   const {page, setPage} = props;
@@ -22,13 +23,17 @@ function TopMenu (props) {
         <FileTextOutlined />
         使用说明
       </Menu.Item>
-      <Menu.Item key="download">
-        <DownloadOutlined />
-        下载使用说明文档
-      </Menu.Item>
       <Menu.Item key="backend">
         <LayoutOutlined />
-        后台管理
+        <a href="http://127.0.0.1:3000" rel="noopener noreferrer">
+          后台管理
+        </a>
+      </Menu.Item>
+      <Menu.Item key="downloadReadme" style={{float: "right", marginRight: "20px"}}>
+        <DownloadOutlined />
+        <a href={`${server}/corpus/download_readme/`} target="_blank" rel="noopener noreferrer">
+          下载使用说明文档
+        </a>
       </Menu.Item>
     </Menu>
   )

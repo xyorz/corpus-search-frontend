@@ -15,7 +15,7 @@ export const infoTagNameMap = {
   type: "文体"
 }
 
-export const highLight = (text, highLightWords) => {
+export const highLight = (text, highLightWords, shouldRender = true) => {
   let keywordPosList = [];
   for (let word of highLightWords) {
     if (word.type === "word") {
@@ -44,6 +44,9 @@ export const highLight = (text, highLightWords) => {
     }
     return prev;
   }, []);
+  if (!shouldRender) {
+    return keywordPosList;
+  }
   const render = [];
   let indexCount = 0;
   for (let i = 0; i < keywordPosList.length; i++) {
@@ -62,9 +65,5 @@ export const highLight = (text, highLightWords) => {
   } else {
     render.push(<span key={indexCount++}>{text}</span>);
   }
-  return (
-    <>
-      {render.map(r => r)}
-    </>
-  )
+  return render;
 }

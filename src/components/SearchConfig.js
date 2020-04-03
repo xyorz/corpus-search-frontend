@@ -25,7 +25,7 @@ function SearchConfig(props) {
 
   const onFiltersChange = filterField => filterVal => {
     filters[filterField] = filterVal;
-    setFilters(filters);
+    setFilters(Object.assign({}, filters));
     onConfigChange("filter")(filters);
   }
 
@@ -94,7 +94,7 @@ function SearchConfig(props) {
             value={filters.type}
             onChange={onFiltersChange("type")}
           >
-            {filterPresets.area && filterPresets.type.map((val, index) => (
+            {filterPresets.type && filterPresets.type.map((val, index) => (
               <Option value={val} key={index}>{val}</Option>
             ))}  
           </Select>

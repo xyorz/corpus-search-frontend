@@ -17,7 +17,7 @@ import SearchMessage from './components/SearchMessage';
 const searchAPI = `${server}/corpus/n_search/`;
 
 function App() {
-  const [page, setPage] = useState("search");
+  const [menu, setMenu] = useState("search");
   const [data, setData] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +36,11 @@ function App() {
   const [statisticsModalVisible, setStatisticsModalVisible] = useState(false);
   const [textDisplayId, setTextDisplayId] = useState(null);
   const [highLightWords, setHighLightWords] = useState([]);
+
+  const onSetMenu = menu => {
+    if (menu === "downloadReadme") return;
+    setMenu(menu)
+  }
 
   const searchRequest = (url, params) => {
     axios.get(url, {params}).then(res => {
@@ -125,7 +130,7 @@ function App() {
   }
 
   const onTextDisplay = textId => {
-    setPage("textDisplay");
+    setMenu("textDisplay");
     setTextDisplayId(textId);
     console.log(textId)
   }
@@ -136,9 +141,9 @@ function App() {
         <ContextModal visible={contextModalVisible} onOk={onHideContext} context={context} highLightWords={highLightWords} />
         <StatisticsModal visible={statisticsModalVisible} onOk={onHideStatistics} data={statistics} />
         <div className="topMenu">
-          <TopMenu page={page} setPage={setPage} />
+          <TopMenu page={menu} setPage={onSetMenu} />
         </div>
-        <div className="searchContainer" style={{display: page === "search"? "flex": "none"}}>
+        <div className="searchContainer" style={{display: menu === "search"? "flex": "none"}}>
           <h1 className="searchTitle">古汉语语料库</h1>
           <SearchInput 
             search={onSearch} 
@@ -169,12 +174,12 @@ function App() {
         </div>
         <div 
           className="readme" 
-          style={{display: page === "readme"? "flex": "none"}}
+          style={{display: menu === "readme"? "flex": "none"}}
           dangerouslySetInnerHTML={{__html: readmeHTML}}
         >
         </div>
         <div
-          style={{display: page === "textDisplay"? "flex": "none"}}
+          style={{display: menu === "textDisplay"? "flex": "none"}}
         >
           <TextDisplay id={textDisplayId} className="textDisplay" />
         </div>
