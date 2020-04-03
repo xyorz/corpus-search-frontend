@@ -85,6 +85,11 @@ function App() {
     setParams(params);
   }
 
+  const onClickDownload = () => {
+    const url = `${server}/corpus/download_result?leftLength=${params.leftLength}&rightLength=${params.rightLength}&type=${params.type}&keyword=${params.keyword}`
+    window.open(url);
+  }
+
   const onChangePage = page => {
     params.page = page;
     searchRequest(searchAPI, params);
@@ -147,7 +152,8 @@ function App() {
           <h1 className="searchTitle">古汉语语料库</h1>
           <SearchInput 
             search={onSearch} 
-            className="searchBox" 
+            onClickDownload={onClickDownload}
+            className="searchBox"
             showStatistics={total > 0} 
             onShowStatistics={onShowStatistics}
           />

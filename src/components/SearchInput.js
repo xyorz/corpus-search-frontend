@@ -4,7 +4,7 @@ import { Input, Button } from 'antd'
 const { Search } = Input;
 
 function SearchInput (props) {
-  const {search, showStatistics, onShowStatistics} = props;
+  const {search, showStatistics, onShowStatistics, onClickDownload} = props;
   return (
     <div className={props.className}>
       <Search
@@ -15,11 +15,17 @@ function SearchInput (props) {
       />
       <Button 
         size="large" 
-        type="primary"
         onClick={onShowStatistics} 
         style={{marginLeft: "1px", display: showStatistics? "block": "none"}}
       >
         统计
+      </Button>
+      <Button 
+        size="large" 
+        onClick={onClickDownload} 
+        style={{marginLeft: "1px", display: showStatistics? "block": "none"}}
+      >
+        下载
       </Button>
     </div>
   )
