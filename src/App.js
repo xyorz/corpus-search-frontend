@@ -11,8 +11,9 @@ import ContextModal from './components/ContextModal'
 import readmeHTML from './components/Readme'
 import TextDisplay from './components/TextDisplay'
 import StatisticsModal from './components/StatisticsModal'
-import './App.css';
 import SearchMessage from './components/SearchMessage';
+import ErrorMessage from './components/ErrorMessage'
+import './App.css';
 
 const searchAPI = `${server}/corpus/n_search/`;
 
@@ -36,6 +37,7 @@ function App() {
   const [statisticsModalVisible, setStatisticsModalVisible] = useState(false);
   const [textDisplayId, setTextDisplayId] = useState(null);
   const [highLightWords, setHighLightWords] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onSetMenu = menu => {
     if (menu === "downloadReadme") return;
@@ -46,9 +48,12 @@ function App() {
     axios.get(url, {params}).then(res => {
       const result = res.data;
       if (result.error) {
-        console.log(result.message);
+        setTotal(0);
+        setData([]);
+        setErrorMessage(result.message);
         return;
       }
+      setErrorMessage(null);
       console.log(result)
       if (!result) {
         return;
@@ -75,11 +80,20 @@ function App() {
 
   const onSearch = value => {
     params.keyword = value;
+    console.log(filters)
     if (filters) {
       for (let key of Object.keys(filters)) {
-        params.keyword += ` ${key}:${filters[key]}`;
+        if (filters[key].length === 0) {
+          continue;
+        }
+        params.keyword += ` ${key}:`;
+        for (let filter of filters[key]) {
+          params.keyword += `${filter.trim()} `
+        }
+        params.keyword = params.keyword.slice(0, params.keyword.length-1)
       }
     }
+    console.log(params.keyword)
     searchRequest(searchAPI, params);
     setCurrentPage(1);
     setParams(params);
@@ -127,6 +141,8 @@ function App() {
     axios.post(`${server}/corpus/get_res_statistics/`, {type: params.type, keyword: params.keyword}).then(res => {
       setStatistics(res.data.dict)
       setStatisticsModalVisible(true);
+    }).catch(() => {
+      setStatistics([])
     })
   }
 
@@ -164,6 +180,10 @@ function App() {
           <SearchMessage 
             messageData={Object.assign({}, params, {total: total})}
             className="searchMessage" 
+          />
+          <ErrorMessage 
+            messageData={errorMessage}
+            className="searchMessage"
           />
           <SearchTable 
             data={data} 

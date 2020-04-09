@@ -12,7 +12,9 @@ export const infoTagNameMap = {
   author: "作者",
   dynasty: "朝代",
   area: "地域",
-  type: "文体"
+  type: "文体",
+  document: "文档名",
+  section: "章节名"
 }
 
 export const highLight = (text, highLightWords, shouldRender = true) => {

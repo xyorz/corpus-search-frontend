@@ -24,6 +24,9 @@ function SearchConfig(props) {
   }, [])
 
   const onFiltersChange = filterField => filterVal => {
+    if (typeof filterVal === 'string') {
+      filterVal = filterVal.split(" ").map(val => val.trim()).filter(val => val);
+    }
     filters[filterField] = filterVal;
     setFilters(Object.assign({}, filters));
     onConfigChange("filter")(filters);
@@ -60,44 +63,64 @@ function SearchConfig(props) {
         </div>
       </div>
       <div style={{width: "100%", display: "flex", justifyContent: "space-between", marginTop: "15px"}}>
-        <div style={{width: "100%", display: "flex", alignItems: "center"}}>
-          <div style={{width: "20%"}}>筛选条件:</div>
-          <Input 
-            style={{width: "20%", margin: "auto 10px auto -18px"}} 
-            placeholder="作者"
-            value={filters.author}
-            onChange={(e) => onFiltersChange("author")(e.target.value)}
-          />
-          <Select 
-            style={{width: "20%", margin: "auto 10px"}} 
-            placeholder="朝代"
-            value={filters.dynasty}
-            onChange={onFiltersChange("dynasty")}
-          >
-            {filterPresets.dynasty && filterPresets.dynasty.map((val, index) => (
-              <Option value={val} key={index}>{val}</Option>
-            ))}
-          </Select>
-          <Select 
-            style={{width: "20%", margin: "auto 10px"}} 
-            placeholder="地域"
-            value={filters.area}
-            onChange={onFiltersChange("area")}
-          >
-            {filterPresets.area && filterPresets.area.map((val, index) => (
-              <Option value={val} key={index}>{val}</Option>
-            ))}
-          </Select>
-          <Select 
-            style={{width: "20%", margin: "auto 7px auto 10px"}} 
-            placeholder="译体"
-            value={filters.type}
-            onChange={onFiltersChange("type")}
-          >
-            {filterPresets.type && filterPresets.type.map((val, index) => (
-              <Option value={val} key={index}>{val}</Option>
-            ))}  
-          </Select>
+        <div style={{width: "100%", display: "flex", alignItems: "center", flexDirection: 'column'}}>
+          <div style={{width: "100%", display: 'flex', justifyContent: 'left', alignItems: 'center'}}>
+            <div style={{width: "20%"}}>筛选条件:</div>
+            <Input 
+              style={{width: "40%", margin: "auto 10px auto -30px"}} 
+              placeholder="文档名"
+              onChange={e => onFiltersChange("document")(e.target.value)}
+            />
+            <Input 
+              style={{width: "40%", margin: "auto 7px auto auto"}} 
+              placeholder="章节名"
+              onChange={e => onFiltersChange("section")(e.target.value)}
+            />
+          </div>
+          <div style={{width: "100%", display: 'flex', justifyContent: 'left', alignItems: 'center',  marginTop: "15px"}}>
+            <div style={{width: "20%"}}></div>
+            <Input 
+              style={{width: "40%", margin: "auto 10px auto -30px"}} 
+              placeholder="作者"
+              onChange={e => onFiltersChange("author")(e.target.value)}
+            />
+            <Select 
+              mode="multiple"
+              style={{width: "40%", margin: "auto 7px auto auto"}} 
+              placeholder="朝代"
+              value={filters.dynasty}
+              onChange={onFiltersChange("dynasty")}
+            >
+              {filterPresets.dynasty && filterPresets.dynasty.map((val, index) => (
+                <Option value={val} key={index}>{val}</Option>
+              ))}
+            </Select>
+          </div>
+          <div style={{width: "100%", display: 'flex', justifyContent: 'left', alignItems: 'center', marginTop: '15px'}}>
+            <div style={{width: "20%"}}></div>
+            <Select 
+              mode="multiple"
+              style={{width: "40%", margin: "auto 10px auto -30px"}} 
+              placeholder="地域"
+              value={filters.area}
+              onChange={onFiltersChange("area")}
+            >
+              {filterPresets.area && filterPresets.area.map((val, index) => (
+                <Option value={val} key={index}>{val}</Option>
+              ))}
+            </Select>
+            <Select 
+              mode="multiple"
+              style={{width: "40%", margin: "auto 7px auto auto"}} 
+              placeholder="译体"
+              value={filters.type}
+              onChange={onFiltersChange("type")}
+            >
+              {filterPresets.type && filterPresets.type.map((val, index) => (
+                <Option value={val} key={index}>{val}</Option>
+              ))}  
+            </Select>
+          </div>
         </div>
       </div>
     </div>
