@@ -12,12 +12,21 @@ const textContainerStyle = {
 }
 
 function TextDisplay(props) {
-  const {id, className} = props;
+  const {id, section, className} = props;
   const [text, setText] = useState("");
   const [title, setTitle] = useState("");
   useEffect(() => {
     if (id) {
-      axios.post(`${server}/corpus/doc/`, {id: id}).then(res => {
+      let url = null;
+      let params = null;
+      if (section) {
+        url = `${server}/corpus/get_section/`;
+        params = {id: id, section: section};
+      } else {
+        url = `${server}/corpus/doc/`;
+        params = {id: id};
+      }
+      axios.post(url, params).then(res => {
         if(res.data && res.data.doc) {
           const textObj = res.data.doc;
           for (let key of Object.keys(textObj)) {
@@ -31,7 +40,7 @@ function TextDisplay(props) {
         }
       })
     }
-  })
+  }, [id, section])
   if (!text) {
     return (
       <div className={className}>

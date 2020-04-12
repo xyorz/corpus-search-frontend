@@ -121,3 +121,23 @@ table {
 .contextText:hover {
   background-color: #C0C0C0;
 }
+
+.sectionTreeContainer {
+  margin-top: 100px;
+  width: 100vw;
+  display: flex;
+  justify-content: center
+}
+
+.sectionTreeItem {
+  flex-basis: 33%;
+  flex-grow: 0;
+  text-align: center;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.sectionTreeItem:hover {
+  transition: .4s;
+  background-color: honeydew;
+}

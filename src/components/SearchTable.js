@@ -12,7 +12,7 @@ function SearchTable (props) {
     onChangePage, 
     onChangePageSize, 
     onShowContext, 
-    onTextDisplay, 
+    onShowAllText, 
     highLightWords
   } = props;
 
@@ -47,7 +47,7 @@ function SearchTable (props) {
           {highLight(text, highLightWords)}
           <div className="tableButton">
             <Button className="context" size="small" onClick={() => onShowContext(record.id)}>上下文</Button>
-            <Button className="context" size="small" onClick={() => onTextDisplay(record.id.split(".")[0])}>原文</Button>
+            <Button className="context" size="small" onClick={() => onShowAllText(record.id.split(".")[0], record.section)}>原文</Button>
           </div>
         </div>
       )

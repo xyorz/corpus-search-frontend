@@ -13,6 +13,7 @@ import TextDisplay from './components/TextDisplay'
 import StatisticsModal from './components/StatisticsModal'
 import SearchMessage from './components/SearchMessage';
 import ErrorMessage from './components/ErrorMessage'
+import SectionTree from './components/SectionTree'
 import './App.css';
 
 const searchAPI = `${server}/corpus/n_search/`;
@@ -35,7 +36,8 @@ function App() {
   const [contextModalVisible, setContextModalVisible] = useState(false);
   const [statistics, setStatistics] = useState([]);
   const [statisticsModalVisible, setStatisticsModalVisible] = useState(false);
-  const [textDisplayId, setTextDisplayId] = useState(null);
+  const [textId, setTextId] = useState(null);
+  const [section, setSection] = useState(null);
   const [highLightWords, setHighLightWords] = useState([]);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -150,10 +152,15 @@ function App() {
     setStatisticsModalVisible(false);
   }
 
-  const onTextDisplay = textId => {
+  const onTextDisplay = (textId, section) => {
+    setTextId(textId);
+    setSection(section);
     setMenu("textDisplay");
-    setTextDisplayId(textId);
-    console.log(textId)
+  }
+
+  const onSectionTreeDisplay = textId => {
+    setMenu("sectionTreeDisplay");
+    setTextId(textId);
   }
 
   return (
@@ -193,7 +200,7 @@ function App() {
             onChangePage={onChangePage}
             onChangePageSize={onChangePageSize}
             onShowContext={onShowContext}
-            onTextDisplay={onTextDisplay}
+            onShowAllText={(id, section) => section? onSectionTreeDisplay(id): onTextDisplay(id, null)}
             highLightWords={highLightWords}
             className="searchTable"
           />
@@ -207,7 +214,12 @@ function App() {
         <div
           style={{display: menu === "textDisplay"? "flex": "none"}}
         >
-          <TextDisplay id={textDisplayId} className="textDisplay" />
+          <TextDisplay id={textId} section={section} className="textDisplay" />
+        </div>
+        <div
+          style={{display: menu === "sectionTreeDisplay"? "flex": "none"}}
+        >
+          <SectionTree id={textId} onSelectSection={onTextDisplay} className="sectionTree" />
         </div>
       </div>
     </ConfigProvider>
