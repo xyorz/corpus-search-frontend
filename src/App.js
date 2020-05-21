@@ -11,7 +11,7 @@ import ContextModal from './components/ContextModal'
 import readmeHTML from './components/Readme'
 import TextDisplay from './components/TextDisplay'
 import StatisticsModal from './components/StatisticsModal'
-import SearchMessage from './components/SearchMessage';
+import SearchMessage from './components/SearchMessage'
 import ErrorMessage from './components/ErrorMessage'
 import SectionTree from './components/SectionTree'
 import './App.css';
@@ -56,7 +56,7 @@ function App() {
         return;
       }
       setErrorMessage(null);
-      console.log(result)
+      // console.log(result)
       if (!result) {
         return;
       }
@@ -214,7 +214,10 @@ function App() {
         <div
           style={{display: menu === "textDisplay"? "flex": "none"}}
         >
-          <TextDisplay id={textId} section={section} className="textDisplay" />
+          {menu === 'textDisplay'
+            ? <TextDisplay id={textId} section={section} className="textDisplay" />
+            : ""
+          }
         </div>
         <div
           style={{display: menu === "sectionTreeDisplay"? "flex": "none"}}

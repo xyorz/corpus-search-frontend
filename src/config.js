@@ -36,10 +36,15 @@ export const highLight = (text, highLightWords, shouldRender = true) => {
     }
   }
   keywordPosList.sort((a, b) => a[0] - b[0]);
+  // console.log(keywordPosList.toString(), text)
+
   keywordPosList = keywordPosList.reduce((prev, cur) => {
     if (prev.length > 0) {
-      if (prev[prev.length-1][1] >= cur[0]) {
-        prev[prev.length-1] = [prev[prev.length-1][0], Math.max(prev[prev.length-1][1], cur[1])];
+      // console.log(prev[prev.length-1][1], cur[0])
+      if (prev[prev.length-1][1] > cur[0]) {
+        prev[prev.length-1] = [cur[0], Math.max(prev[prev.length-1][1], cur[1])];
+      } else {
+        prev.push(cur);
       }
     } else {
       prev.push(cur)
@@ -51,6 +56,7 @@ export const highLight = (text, highLightWords, shouldRender = true) => {
   }
   const render = [];
   let indexCount = 0;
+  // console.log(keywordPosList.toString(), text)
   for (let i = 0; i < keywordPosList.length; i++) {
     const span = keywordPosList[i];
     if (i === 0) {

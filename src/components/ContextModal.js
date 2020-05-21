@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Tooltip } from 'antd';
 import { infoTagFilterList, infoTagNameMap, highLight } from '../config';
 
-const getDetailElem = info => {
+export const getDetailElem = info => {
   const infoShow = {};
   if (Object.keys(info).includes("detail") && info.detail) {
     const detail = JSON.parse(info.detail);
@@ -25,13 +25,24 @@ const getDetailElem = info => {
   )
 }
 
-const buildZhujie = (spanList, zhujieInfo=[], text) => {
+function flatten(array) {
+  var flattend = [];
+  (function flat(array) {
+    array.forEach(function(el) {
+      if (Array.isArray(el)) flat(el);
+      else flattend.push(el);
+    });
+  })(array);
+  return flattend;
+}
+
+export const buildZhujie = (spanList, zhujieInfo=[], text) => {
   const resList = [];
-  // if (!zhujieInfo) {
-  //   return spanList;
-  // }
-  const offsetList = (zhujieInfo && zhujieInfo.offset.map(offset => offset + 1)) || [];
-  let allSplit = [...new Set(spanList.flat(Infinity).concat(offsetList))];
+  if (!Array.isArray(spanList)) {
+    spanList = [spanList];
+  }
+  const offsetList = (zhujieInfo && zhujieInfo.offset && zhujieInfo.offset.map(offset => offset + 1)) || [];
+  let allSplit = [...new Set(flatten(spanList).concat(offsetList))];
   allSplit = allSplit.sort((a, b) => a-b);
   let curIndex = 0;
   let lastIndex = 0;
@@ -115,7 +126,7 @@ function ContextModal(props) {
         {context.next.map((sentences, index) => (
           <p key={index}>
             {sentences.map((info, index) => (
-              <Tooltip key={index} title={getDetailElem(info)}  placement="top" autoAdjustOverflow>
+              <Tooltip key={index} title={getDetailElem(info)} placement="top" autoAdjustOverflow>
                 <span className="contextText">{buildZhujie(highLight(info.text, highLightWords, false), info.zhujie? JSON.parse(info.zhujie) : null, info.text)}</span>
               </Tooltip>
             ))}
