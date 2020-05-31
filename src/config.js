@@ -21,7 +21,7 @@ export const highLight = (text, highLightWords, shouldRender = true) => {
   let keywordPosList = [];
   for (let word of highLightWords) {
     if (word.type === "word") {
-      let curIndex = 0;
+      let curIndex = -1;
       while ((curIndex = text.indexOf(word.value, curIndex+1)) >= 0) {
         keywordPosList.push([curIndex, curIndex + word.value.length]);
       }
@@ -36,7 +36,6 @@ export const highLight = (text, highLightWords, shouldRender = true) => {
     }
   }
   keywordPosList.sort((a, b) => a[0] - b[0]);
-  // console.log(keywordPosList.toString(), text)
 
   keywordPosList = keywordPosList.reduce((prev, cur) => {
     if (prev.length > 0) {
@@ -59,6 +58,8 @@ export const highLight = (text, highLightWords, shouldRender = true) => {
   // console.log(keywordPosList.toString(), text)
   for (let i = 0; i < keywordPosList.length; i++) {
     const span = keywordPosList[i];
+    // console.log(text.slice(span[0], span[1]), span[0], span[1], text)
+
     if (i === 0) {
       render.push(<span key={indexCount++}>{text.slice(0, span[0])}</span>);
       render.push(<span key={indexCount++} style={{color: "red"}}>{text.slice(span[0], span[1])}</span>);
